@@ -1,7 +1,7 @@
 {
   "name": "ember-keen-querying",
   "version": "0.0.1",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Ember Add-on for querying events with Keen IO",
   "directories": {
     "doc": "doc",
     "test": "tests"
