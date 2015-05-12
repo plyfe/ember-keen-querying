@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/plyfe/ember-keen-querying.svg?branch=master)](https://travis-ci.org/plyfe/ember-keen-querying)
+[![Build Status](https://travis-ci.org/plyfe/ember-keen-querying.svg?branch=master)](https://travis-ci.org/plyfe/ember-keen-querying) [![Ember Observer Score](http://emberobserver.com/badges/ember-keen-querying.svg)](http://emberobserver.com/addons/ember-keen-querying)
 
 # ember-keen-querying
 
