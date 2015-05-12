@@ -1,6 +1,6 @@
 {
   "name": "ember-keen-querying",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Ember Add-on for querying events with Keen IO",
   "directories": {
     "doc": "doc",
