@@ -1,6 +1,6 @@
-# ember-keen-querying
-
 [![Build Status](https://travis-ci.org/plyfe/ember-keen-querying.svg?branch=master)](https://travis-ci.org/plyfe/ember-keen-querying) [![Ember Observer Score](http://emberobserver.com/badges/ember-keen-querying.svg)](http://emberobserver.com/addons/ember-keen-querying)
+
+# ember-keen-querying
 
 ember-keen-querying is an easy way to query events in Keen IO in your ember-cli project. A simple Ember service wraps the [keen-js SDK](https://github.com/keen/keen-js) and can be injected anywhere in your application.
 
