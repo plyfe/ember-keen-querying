@@ -6,6 +6,6 @@ module.exports = {
 
   included: function(app) {
     this._super.included(app);
-    app.import(app.bowerDirectory + '/keen-min-js/keen-min.js');
+    app.import(app.bowerDirectory + '/keen-js/dist/keen.js');
   }
 };
