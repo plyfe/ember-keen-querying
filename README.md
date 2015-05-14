@@ -10,7 +10,8 @@ We welcome contributions!
 
 ## Installation
 
-`npm install --save-dev ember-keen-querying`
+`ember install:addon ember-keen-querying`<br>
+`ember generate ember-keen-querying`
 
 ## Setup
 
