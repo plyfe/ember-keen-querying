@@ -50,7 +50,7 @@ export default Service.extend({
   }),
 
   /**
-   * Allowd values: https | http | auto
+   * Allowed values: https | http | auto
    * @property protocol
    * @default "auto"
    * @optional
@@ -137,6 +137,43 @@ export default Service.extend({
           reject(err);
         }
         else {
+          resolve(res);
+        }
+      });
+    });
+  },
+
+  /**
+   * Inspect all event collections in the project and their properties.
+   * @method
+   * @returns {Ember.RSVP.Promise}
+   */
+  collectionsAll: function() {
+    return new Ember.RSVP.Promise((resolve,reject) => {
+      let url = this.get('client').url('/events');
+      this.get('client').get(url, null, this.get('client').readKey(), (err, res) =>{
+        if (err) {
+          reject(new Error(err));
+        }  else {
+          resolve(res);
+        }
+      });
+    });
+  },
+
+  /**
+   * Inspect a single event collection and its properties.
+   * @method
+   * @param collection_name the name of the event collection to inspect
+   * @returns {Ember.RSVP.Promise}
+   */
+  collection: function(collection_name) {
+    return new Ember.RSVP.Promise((resolve,reject) => {
+      let url = this.get('client').url(`/events/${collection_name}`);
+      this.get('client').get(url, null, this.get('client').readKey(), (err, res) =>{
+        if (err) {
+          reject(new Error(err));
+        }  else {
           resolve(res);
         }
       });

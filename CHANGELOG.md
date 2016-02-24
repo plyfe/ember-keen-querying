@@ -7,6 +7,8 @@
 ### Added
 - This [CHANGELOG.md](CHANGELOG.md)
 - Documentation to the KeenQueryingService
+- `.collectionsAll()` method to fetch all event collections
+- `.collection()` method to fetch a single event collections
 
 ### Changed
 - Added tmp dir to `.npmignore` (thanks @odoe)

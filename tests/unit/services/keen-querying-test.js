@@ -105,3 +105,80 @@ test('_prepareAnalysis accepts either an object or a string for its second argum
   assert.equal(keenQuery1.params.eventCollection, "wiggles", "params accepts object as is");
   assert.equal(keenQuery2.params.eventCollection, "wiggles", "params adds string as eventCollection property");
 });
+
+
+test('inspect all event collections', function(assert) {
+  let event = [
+      {
+        "name": "purchases",
+        "properties": {
+          "item.id": "num",
+          "item.on_sale": "bool",
+          "item.price": "num",
+          "quantity": "num",
+          "screen.name": "string",
+          "user.id": "num",
+          "user.level": "num",
+          "user.referring_source": "string"
+        },
+        "url": "/3.0/projects/PROJECT_ID/events/purchases"
+      },
+      {
+        "name": "level_ups",
+        "properties": {
+          "from_level": "num",
+          "level": "num",
+          "screen.name": "string",
+          "to_level": "num",
+          "user.id": "num",
+          "user.level": "num",
+          "user.prior_balance": "num",
+          "user.referring_source": "string"
+        },
+        "url": "/3.0/projects/PROJECT_ID/events/level_ups"
+      },
+      {
+        "name": "logins",
+        "properties": {
+          "user.email": "string",
+          "user.id": "string",
+          "user_agent.browser": "string",
+          "user_agent.browser_version": "string",
+          "user_agent.platform": "string"
+        },
+        "url": "/3.0/projects/PROJECT_ID/events/logins"
+      }
+    ];
+  var service = this.subject({
+    client: keenClientStub.create({getResponse: event})
+  });
+  return service.collectionsAll().then((r) => {
+    assert.deepEqual(r, event);
+  });
+});
+
+
+test('inspect single event', function(assert) {
+
+  let event =  {
+    "name": "purchases",
+    "properties": {
+      "item.id": "num",
+      "item.on_sale": "bool",
+      "item.price": "num",
+      "quantity": "num",
+      "screen.name": "string",
+      "user.id": "num",
+      "user.level": "num",
+      "user.referring_source": "string"
+    },
+    "url": "/3.0/projects/PROJECT_ID/events/COLLECTION_NAME"
+  };
+  var service = this.subject({
+    client: keenClientStub.create({getResponse: event})
+  });
+  return service.collection().then((r) => {
+    assert.deepEqual(r, event);
+  });
+});
+
