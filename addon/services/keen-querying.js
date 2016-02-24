@@ -1,12 +1,13 @@
-import Ember from 'ember';
 /* global Keen */
+import Ember from 'ember';
+import config from 'ember-get-config';
 
 // See keen-js SDK's query events docs for more info:
 // https://github.com/keen/keen-js/blob/master/docs/query.md#run-multiple-analyses-at-once
 
 export default Ember.Service.extend({
   env: Ember.computed(function () {
-    return Ember.getOwner(this).resolveRegistration('config:environment');
+    return config;
   }),
   projectId: Ember.computed('env', function () {   // String (required always)
     var projectId = this.get('env').KEEN_PROJECT_ID || Ember.$('meta[property="keen:project_id"]').attr('content') || window.KEEN_PROJECT_ID;
