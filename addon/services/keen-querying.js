@@ -7,21 +7,35 @@ const {
   Logger,
   RSVP,
   computed,
-  typeOf
+  typeOf,
+  isBlank
   } = Ember;
 
-// See keen-js SDK's query events docs for more info:
-// https://github.com/keen/keen-js/blob/master/docs/query.md#run-multiple-analyses-at-once
-
+/**
+ *  An Ember service for Keen.io that exposes querying and extraction APIs using the keen.js library.
+ *
+ * See [keen-js SDK's docs](https://github.com/keen/keen-js) for more info.
+ *
+ * @module keen-querying
+ * @namespace Service
+ * @class KeenQuerying
+ * @extends Ember.Service
+ */
 export default Service.extend({
   env: computed(function () {
     return config;
   }),
 
-  projectId: computed('env', function () {   // String (required always)
-    var projectId = this.get('env').KEEN_PROJECT_ID || Ember.$('meta[property="keen:project_id"]').attr('content') || window.KEEN_PROJECT_ID;
-    if (!projectId) {
-      Logger.info('Ember Keen Querying: Missing Keen project id, please set `ENV.KEEN_PROJECT_ID` in config.environment.js');
+  /**
+   * The Keen Project ID
+   * @required
+   * @property
+   * @type String
+   */
+  projectId: computed('env', function () {
+    let projectId = this.get('env').KEEN_PROJECT_ID || Ember.$('meta[property="keen:project_id"]').attr('content') || window.KEEN_PROJECT_ID;
+    if (isBlank(projectId)) {
+      Logger.info('Ember Keen Querying: Missing Keen project id, please set ENV.KEEN_PROJECT_ID in config.environment.js');
     }
     return projectId;
   }),
@@ -29,16 +43,40 @@ export default Service.extend({
 
   readKey: computed('env', function () {   // String (required for sending data)
     var readKey = this.get('env').KEEN_READ_KEY || Ember.$('meta[property="keen:read_key"]').attr('content') || window.KEEN_READ_KEY;
-    if (!readKey) {
-      Logger.info('Ember Keen Querying: Missing Keen read key, please set `ENV.KEEN_READ_KEY` in config.environment.js');
+    if (isBlank(readKey)) {
+      Logger.info('Ember Keen Querying: Missing Keen read key, please set ENV.KEEN_READ_KEY in config.environment.js');
     }
     return readKey;
   }),
 
-  protocol: "auto",         // String (optional: https | http | auto)
-  host: "api.keen.io/3.0",  // String (optional)
-  requestType: null,        // String (optional: jsonp, xhr, beacon)
+  /**
+   * Allowd values: https | http | auto
+   * @property protocol
+   * @default "auto"
+   * @optional
+   * @type String
+   */
+  protocol: "auto",
+  /**
+   * @property host
+   * @default "api.keen.io/3.0"
+   * @optional
+   * @type String
+   */
+  host: "api.keen.io/3.0",
+  /**
+   * Allowd values: null, jsonp, xhr, beacon
+   * @property requestType
+   * @default null, decided by the Keen library
+   * @optional
+   * @type null|String
+   */
+  requestType: null,
 
+  /**
+   * The Keen client object, configured and ready to go.
+   * @property client
+   */
   client: computed('projectId', 'readKey', 'protocol', 'host', 'requestType', function () {
     return new Keen({
       projectId: this.get('projectId'),
@@ -49,6 +87,21 @@ export default Service.extend({
     });
   }),
 
+  /**
+   * Query a single event collection or extraction.
+   *
+   * @example
+   *     keenQuerying.query('count', {
+   *         event_collection: "pageviews",
+   *         timeframe: {
+   *           "start":"2015-07-01T07:00:00.000Z",
+   *           "end":"2015-08-01T07:00:00.000Z"
+   *      }).then(...)
+   *
+   * @param analysisType
+   * @param eventOrParams
+   * @returns {RSVP.Promise}
+   */
   query: function (analysisType, eventOrParams) {
     var analysis = this._prepareAnalysis(analysisType, eventOrParams);
     return new RSVP.Promise((resolve, reject) => {
@@ -63,8 +116,15 @@ export default Service.extend({
     });
   },
 
-  // argument structure = {{analysisType1: eventOrParams1}, {analysisType2: eventOrParams2}, ...}
-  // https://github.com/keen/keen-js/blob/master/docs/query.md#run-multiple-analyses-at-once
+  //
+  /**
+   * TODO : fix these docs
+   *  See [keen-js SDK's query events docs](https://github.com/keen/keen-js/blob/master/docs/query.md#run-multiple-analyses-at-once) for more info.
+   *
+   * argument structure = {{analysisType1: eventOrParams1}, {analysisType2: eventOrParams2}, ...}
+   * @param queriesData a nested object of
+   * @returns {RSVP.Promise}
+     */
   multiQuery: function (queriesData) {
     var analyses = [];
     for (var key in queriesData) {
@@ -83,6 +143,13 @@ export default Service.extend({
     });
   },
 
+  /**
+   * Creates the Keen.Query object from parameters
+   * @param analysisType
+   * @param eventOrParams a bare event string or collection of params.
+   * @returns {Keen.Query}
+   * @private
+   */
   _prepareAnalysis: function (analysisType, eventOrParams) {
     var params = eventOrParams;
     if (typeOf(eventOrParams) === 'string') {
@@ -91,3 +158,4 @@ export default Service.extend({
     return new Keen.Query(analysisType, params);
   }
 });
+
